@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="GB18030">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<TITLE>Name Generator</TITLE>
+	<style>
+		.collapsible {
+			background-color: #777;
+			color: white;
+			cursor: pointer;
+			padding: 10px;
+			width: 100%;
+			border: none;
+			text-align: left;
+			outline: none;
+			font-size: 15px;
+		}
+
+		.active,
+		.collapsible:hover {
+			background-color: #555;
+		}
+
+		.content {
+			max-height: 0;
+			transition: max-height 0.2s ease-out;
+			padding: 0 18px;
+			width: 95%;
+			overflow: hidden;
+			background-color: #f7f7f7;
+		}
+
+		.collapsible:after {
+			content: '\02795';
+			/* Unicode character for "plus" sign (+) */
+			font-size: 13px;
+			color: white;
+			float: right;
+			margin-left: 5px;
+		}
+
+		.active:after {
+			content: "\2796";
+			/* Unicode character for "minus" sign (-) */
+		}
+
+		body {
+			font-family: Verdana, Geneva, Tahoma, sans-serif;
+			font-size: small;
+		}
+
+
+		.smallText {
+			font-size: 12px;
+		}
+
+		th {
+			border: 0px solid black;
+			vertical-align: top;
+			text-align: left;
+
+		}
+
+		table {
+			display: table;
+			border-collapse: separate;
+			border-spacing: 0px;
+			border-color: gray;
+		}
+
+		tr {
+			font-family: Verdana, Geneva, Tahoma, sans-serif;
+			font-size: small;
+		}
+
+		td {
+			font-family: Verdana, Geneva, Tahoma, sans-serif;
+			font-size: small;
+			border: 0px solid black;
+			vertical-align: top;
+		}
+
+		h3 {
+			margin-bottom: 10;
+		}
+
+		h4 {
+			margin-top: 0;
+			margin-bottom: 2;
+		}
+
+		.tooltip {
+			position: relative;
+			display: inline-block;
+		}
+
+		.tooltip .tooltiptext {
+			visibility: hidden;
+			width: 400px;
+			background-color: #555;
+			color: #fff;
+			text-align: center;
+			border-radius: 6px;
+			padding: 5px;
+			position: absolute;
+			z-index: 1;
+			bottom: 150%;
+			left: 50%;
+			margin-left: -50px;
+			opacity: 0;
+			transition: opacity 0.3s;
+		}
+
+		.tooltip .tooltiptext::after {
+			content: "";
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			margin-left: -5px;
+			border-width: 5px;
+			border-style: solid;
+			border-color: #555 transparent transparent transparent;
+		}
+
+		.tooltip:hover .tooltiptext {
+			visibility: visible;
+			opacity: 1;
+		}
+	</style>
+</head>
+
+<script>
+	function limit(element, max_chars) {
+		if (element.value.length > max_chars) {
+			element.value = element.value.substr(0, max_chars);
+		}
+	}
+
+	function minmax(value, min, max) {
+		if (parseInt(value) < min || isNaN(parseInt(value)))
+			return 0;
+		else if (parseInt(value) > max)
+			return 100;
+		else return value;
+	}
+
+	function Copy2ClipBoard() {
+		var copyText = document.getElementById("temp_filename");
+		copyText.select();
+		document.execCommand("copy");
+		var tooltip = document.getElementById("myTooltip");
+		tooltip.innerHTML = "Copied: " + copyText.value;
+
+	}
+
+	function outFunc() {
+		var tooltip = document.getElementById("myTooltip");
+		tooltip.innerHTML = "Copy to clipboard";
+	}
+
+	function Reset() {
+		document.getElementById('temp_filename').value = "";
+	}
+
+	function JoinTextDrawings() {
+		var js_ROE = document.getElementById("drawings-ROE").value;
+		var js_Simplified = document.getElementById("drawings-Simplified").value;
+		var js_Description = document.getElementById("drawings-Description").value;
+		var js_dimensional = document.getElementById("drawings-dimensional").value;
+		var js_version = document.getElementById("drawings-version").value;
+		var js_product2 = document.getElementById("drawings-product").value;
+
+
+		//product
+		var js_product1 = [
+			document.getElementById("drawings-AB"),
+			document.getElementById("drawings-BM"),
+			document.getElementById("drawings-BO"),
+			document.getElementById("drawings-BP"),
+			document.getElementById("drawings-BQ"),
+			document.getElementById("drawings-CB"),
+			document.getElementById("drawings-DM"),
+			document.getElementById("drawings-HY"),
+			document.getElementById("drawings-JA"),
+			document.getElementById("drawings-LX"),
+			document.getElementById("drawings-MC"),
+			document.getElementById("drawings-Strip"),
+			document.getElementById("drawings-RB"),
+			document.getElementById("drawings-SP"),
+			document.getElementById("drawings-Vanish"),
+			document.getElementById("drawings-MVR"),
+			document.getElementById("drawings-ev4"),
+			document.getElementById("drawings-hd102"),
+			document.getElementById("drawings-Brompton")
+		];
+
+
+		//var js_ROEat = document.getElementById("format").value;
+		//var js_version = document.getElementById("version").value.toUpperCase();
+
+
+		/*
+		if (js_Description !== "") {
+			if (js_version !== "") {
+				var js_filename = js_ROE.concat(js_product, '(', js_Description, ')_', js_product, js_option, js_property, js_version, '_', js_dimensional);
+			}
+			else {
+				var js_filename = js_ROE.concat(js_product, '(', js_Description, ')_', js_product, js_option, js_property, js_dimensional);
+			}
+		}
+		if (js_Description == "") {
+			if (js_version !== "") {
+				var js_filename = js_ROE.concat(js_product, '_', js_product, js_option, js_property, js_version, '_', js_dimensional);
+			}
+			else {
+				var js_filename = js_ROE.concat(js_product, '_', js_product, js_option, js_property, js_dimensional);
+			}
+		}*/
+
+
+
+		//get product texts.
+		var i = 0;
+		var temp_product = "";
+		for (i = 0; i < js_product1.length; i++) {
+			while (js_product1[i].checked) {
+				temp_product += js_product1[i].value;
+				break;
+			}
+		}
+		temp_product = temp_product.substr(0, temp_product.length - 1)
+
+		if (js_Description.length) {
+			var js_filename = js_ROE.concat(js_Simplified, js_Description, "_", js_dimensional, "v", js_version, "_", temp_product, js_product2);
+		}
+		else {
+			var js_filename = js_ROE.concat(js_Simplified, js_dimensional, "v", js_version, "_", temp_product, js_product2);
+		}
+		document.getElementById('temp_filename').value = js_filename;
+	}
+
+	function JoinTextManuals() {
+		var js_ROE = document.getElementById("manuals-ROE").value;
+		var js_manual_type = document.getElementById("manuals-manual-type").value;
+		var js_manuals_remark = document.getElementById("manuals-remark").value;
+		var js_version = document.getElementById("manuals-version").value;
+		var js_product2 = document.getElementById("manuals-product").value;
+
+
+		//product
+		var js_product1 = [
+			document.getElementById("manuals-AB"),
+			document.getElementById("manuals-BM"),
+			document.getElementById("manuals-BO"),
+			document.getElementById("manuals-BP"),
+			document.getElementById("manuals-BQ"),
+			document.getElementById("manuals-CB"),
+			document.getElementById("manuals-DM"),
+			document.getElementById("manuals-HY"),
+			document.getElementById("manuals-JA"),
+			document.getElementById("manuals-LX"),
+			document.getElementById("manuals-MC"),
+			document.getElementById("manuals-Strip"),
+			document.getElementById("manuals-RB"),
+			document.getElementById("manuals-SP"),
+			document.getElementById("manuals-Vanish"),
+			document.getElementById("manuals-MVR"),
+			document.getElementById("manuals-ev4"),
+			document.getElementById("manuals-hd102"),
+			document.getElementById("manuals-Brompton")
+		];
+
+
+		//console.log(js_customized);
+
+		//get product texts.
+		var i = 0;
+		var temp_product = "";
+		for (i = 0; i < js_product1.length; i++) {
+			while (js_product1[i].checked) {
+				temp_product += js_product1[i].value;
+				break;
+			}
+		}
+		temp_product = temp_product.substr(0, temp_product.length - 1)
+
+		if (js_manuals_remark.length) {
+			var js_filename = js_ROE.concat(js_manual_type, js_manuals_remark, "_", temp_product, js_product2, "_", "v", js_version);
+		}
+		else {
+			var js_filename = js_ROE.concat(js_manual_type, temp_product, js_product2, "_", "v", js_version);
+		}
+
+
+		document.getElementById('temp_filename').value = js_filename;
+	}
+
+	function JoinTextCert() {
+		var js_ROE = document.getElementById("cert-ROE").value;
+		var js_external = document.getElementById("cert-external").value;
+		var js_agent = document.getElementById("cert-agent").value;
+		var js_type = document.getElementById("cert-type").value;
+		var js_description = document.getElementById("cert-description").value;
+		var js_product2 = document.getElementById("cert-product").value;
+
+
+		//product
+		var js_product1 = [
+			document.getElementById("cert-NA"),
+			document.getElementById("cert-AB"),
+			document.getElementById("cert-BM"),
+			document.getElementById("cert-BO"),
+			document.getElementById("cert-BP"),
+			document.getElementById("cert-BQ"),
+			document.getElementById("cert-CB"),
+			document.getElementById("cert-DM"),
+			document.getElementById("cert-HY"),
+			document.getElementById("cert-JA"),
+			document.getElementById("cert-LX"),
+			document.getElementById("cert-MC"),
+			document.getElementById("cert-Strip"),
+			document.getElementById("cert-RB"),
+			document.getElementById("cert-SP"),
+			document.getElementById("cert-Vanish"),
+			document.getElementById("cert-MVR"),
+			document.getElementById("cert-ev4"),
+			document.getElementById("cert-hd102"),
+			document.getElementById("cert-Brompton")
+		];
+
+		//console.log(js_customized);
+
+		//get product texts.
+		var i = 0;
+		var temp_product = "";
+		for (i = 0; i < js_product1.length; i++) {
+			while (js_product1[i].checked) {
+				temp_product += js_product1[i].value;
+				break;
+			}
+		}
+		temp_product = temp_product.substr(0, temp_product.length - 1);
+
+
+		if (js_description.length) {
+			var js_filename = js_ROE.concat(js_external, js_agent, js_type, js_description, "_", temp_product, js_product2);
+		}
+		else {
+			var js_filename = js_ROE.concat(js_external, js_agent, js_type, temp_product, js_product2);
+		}
+
+
+		document.getElementById('temp_filename').value = js_filename;
+	}
+
+	function UncheckALL(temp_class) {
+		temp_class = '.' + temp_class;
+		var inputs = document.querySelectorAll(temp_class);
+		for (var i = 0; i < inputs.length; i++) {
+			inputs[i].checked = false;
+		}
+	}
+
+	function UnselectALL(temp_id){
+		document.getElementById(temp_id).value = '';
+	}
+</script>
+
+<body>
+	<h3>Name Generator for Drawings, Manuals, etc. v0.2</h3>
+
+	<div id="file_name">Calculated Filename:
+
+		<div class="tooltip">
+			<button onclick="Copy2ClipBoard()" onmouseout="outFunc()">
+				<span class="tooltiptext" id="myTooltip">Copy File Name to Clipboard</span>Copy File Name
+			</button>
+		</div>
+		<br>
+		<br>
+		<input type="text" value="" id="temp_filename" size="100" style="border: none; font-size:20px"
+			readonly="readonly">
+	</div>
+
+	<br>
+	<br>
+
+	<!--Drawings-->
+	<button type="button" class="collapsible">Drawings</button>
+	<div class="content">
+		<form id="drawings">
+
+			<input type="reset" value="Reset" onclick="Reset()">
+			<table border="1" style="text-align:center">
+				<tr>
+					<td>ROE</td>
+					<td>Simplified?</td>
+					<td>Description</td>
+					<td>Dimensional</td>
+					<td>Version</td>
+					<td>Product Family</td>
+					<td>Product</td>
+				</tr>
+				<tr>
+					<td>
+						<select id="drawings-ROE" name="ROE" size="2">
+							<option value="ROE_" selected>ROE</option>
+						</select>
+					</td>
+					<td>
+						<select id="drawings-Simplified" name="Simplified" size="2">
+							<option value="">NO</option>
+							<option value="S_">YES</option>
+						</select>
+					</td>
+					<td>
+						<table>
+							<tr>
+								<input id="drawings-Description" type="text" name="Description" size="30"
+									placeholder="Side Vertical Bar 2H-Wall Mount">
+							</tr>
+							<tr>
+								<div>
+									Use hyphen to conect.<br>
+									E.g. Side Vertical Bar 2H-Wall Mount
+								</div>
+							</tr>
+						</table>
+
+					</td>
+					<td>
+						<select id="drawings-dimensional" name="dimensional" size="3">
+							<option value="">N/A</option>
+							<option value="2D_">2D</option>
+							<option value="3D_">3D</option>
+						</select>
+					</td>
+					<td>
+						<table>
+							<tr>
+								<input type="number" step="0.1" placeholder="e.g. 1.9" id="drawings-version"
+									onkeydown="limit(this, 4);" onkeyup="limit(this, 4);"
+									onkeyup="this.value = minmax(this.value, 0, 4)" min="0.1" size="8" required>
+							</tr>
+							<tr>
+								<div>Input NUM only.<br><br>1 decimal place, eg. 1.9.<br>Go with 2.0 if beyond.</div>
+							</tr>
+						</table>
+
+
+
+					</td>
+					<td style="text-align: left;">
+						<!--
+					<select id="product" name="product" size="7">
+						<option value=""></option>
+						<optgroup label="Panels">
+							<option value="BM_">BM-Black Marble</option>
+							<option value="BO_">BO-Black OnyX</option>
+							<option value="BP_">BP-Black Pearl</option>
+							<option value="BC_">BC-Block</option>
+							<option value="CB_">CB-Carbon</option>
+							<option value="DM_">DM-Diamond</option>
+							<option value="HY_">HY-Hybird</option>
+							<option value="LX_">LX-Linx</option>
+							<option value="MC_">MC-Magic Cube</option>
+							<option value="Strip_">ROE Strip</option>
+							<option value="SP_">SP-Sapphire</option>
+							<option value="Vanish_">Vanish</option>
+						</optgroup>
+						<optgroup label="Control Systems">
+							<option value="MVR_">MVR</option>
+							<option value="ROE_">ROE</option>
+							<option value="Brompton_">Brompton</option>
+						</optgroup>
+					</select>-->
+						<table>
+							<td>
+								<input type="checkbox" class="drawingscheck" id="drawings-NA" name="NA" value="">
+								<label for="NA"> N/A</label><br>
+								<input type="checkbox" class="drawingscheck" id="drawings-AB" name="AB" value="AB.">
+								<label for="AB"> AB-Amber</label><br>
+								<input type="checkbox" class="drawingscheck" id="drawings-BM" name="BM" value="BM.">
+								<label for="BM"> BM-Black Marble</label><br>
+								<input type="checkbox" class="drawingscheck" id="drawings-BO" name="BO" value="BO.">
+								<label for="BO"> BO-Black OnyX</label><br>
+								<input type="checkbox" class="drawingscheck" id="drawings-BP" name="BP" value="BP.">
+								<label for="BP"> BP-Black Pearl</label><br>
+								<input type="checkbox" class="drawingscheck" id="drawings-BQ" name="BQ" value="BQ.">
+								<label for="BQ"> BQ-Black Quartz</label><br>
+								<input type="checkbox" class="drawingscheck" id="drawings-CB" name="CB" value="CB.">
+								<label for="CB"> CB-Carbon</label><br>
+								<input type="checkbox" class="drawingscheck" id="drawings-DM" name="DM" value="DM.">
+								<label for="DM"> DM-Diamond</label><br>
+								<input type="checkbox" class="drawingscheck" id="drawings-HY" name="HY" value="HY.">
+								<label for="HY"> HY-Hybrid</label><br>
+								<input type="checkbox" class="drawingscheck" id="drawings-JA" name="JA" value="JA.">
+								<label for="JA"> JA-Jasper</label><br>
+							</td>
+							<td>
+								<input type="checkbox" class="drawingscheck" id="drawings-LX" name="LX" value="LX.">
+								<label for="LX"> LX-LINX</label><br>
+								<input type="checkbox" class="drawingscheck" id="drawings-MC" name="MC" value="MC.">
+								<label for="MC"> MC-Magic Cube</label><br>
+								<input type="checkbox" class="drawingscheck" id="drawings-Strip" name="Strip"
+									value="Strip.">
+								<label for="Strip"> Strip-ROE Strip</label><br>
+								<input type="checkbox" class="drawingscheck" id="drawings-RB" name="RB" value="RB.">
+								<label for="RB"> RB-Ruby</label><br>
+								<input type="checkbox" class="drawingscheck" id="drawings-SP" name="SP" value="SP.">
+								<label for="SP"> SP-Sapphire</label><br>
+								<input type="checkbox" class="drawingscheck" id="drawings-Vanish" name="Vanish"
+									value="Vanish.">
+								<label for="Vanish"> Vanish-Vanish</label><br>
+								<input type="checkbox" class="drawingscheck" id="drawings-MVR" name="MVR" value="MVR.">
+								<label for="MVR"> MVR HELIOS</label><br>
+								<input type="checkbox" class="drawingscheck" id="drawings-ev4" name="ev4" value="eV4.">
+								<label for="ROE"> ROE EVISION eV4</label><br>
+								<input type="checkbox" class="drawingscheck" id="drawings-hd102" name="hd102"
+									value="HD102.">
+								<label for="ROE"> ROE EVISION HD102</label><br>
+								<input type="checkbox" class="drawingscheck" id="drawings-Brompton" name="Brompton"
+									value="Brompton.">
+								<label for="Brompton"> Brompton Tessera</label><br>
+							</td>
+						</table>
+					</td>
+					<td>
+						<select id="drawings-product" name="drawings-product" size="12">
+							<option value="">N/A</option>
+							<optgroup label="AB">
+								<option value="AB0.9">Amber 0.9</option>
+								<option value="AB1.2">Amber 1.2</option>
+								<option value="AB1.5">Amber 1.5</option>
+								<option value="AB1.8">Amber 1.8</option>
+							</optgroup>
+							<optgroup label="BM">
+								<option value="BM2">BM2</option>
+								<option value="BM4">BM4</option>
+								<option value="BM5">BM5</option>
+								<option value="BM15">BM15</option>
+							</optgroup>
+							<optgroup label="BO">
+								<option value="BO2">BO2</option>
+								<option value="BO3">BO3</option>
+								<option value="BO2 Triangle">BO2 Triangle</option>
+								<option value="BO2 90 Degree Corner">BO2 90 Degree Corner</option>
+								<option value="BO3 90 Degree Corner">BO3 90 Degree Corner</option>
+								<option value="BO2 Round Corner">BO2 Round Corner</option>
+								<option value="BO3 Round Corner">BO3 Round Corner</option>
+							</optgroup>
+							<optgroup label="BP">
+								<option value="BP2">BP2</option>
+								<option value="BP3">BP3</option>
+								<option value="BP3 90 Degree Corner">BP3 90 Degree Corner</option>
+								<option value="BP3 Round Corner">BP3 Round Corner</option>
+							</optgroup>
+							<optgroup label="BQ">
+								<option value="BQ3.9">BQ 3.9</option>
+								<option value="BQ4.6">BQ 4.6</option>
+							</optgroup>
+							<optgroup label="CB">
+								<option value="CB3">CB3</option>
+								<option value="CB3-H">CB3 Half Panel</option>
+								<option value="CB5W">CB5-White LED</option>
+								<option value="CB5B">CB5-Black LED</option>
+								<option value="CB5W-H">CB5 Half Panel-White LED</option>
+								<option value="CB5B-H">CB5 Half Panel-Black LED</option>
+								<option value="CB8-Transparent">CB8-Transparent</option>
+								<option value="CB8-H-Transparent">CB8 Half Panel-Transparent</option>
+								<option value="CB8-Solid">CB8-Solid</option>
+								<option value="CB8-H-Solid">CB8 Half Panel-Solid</option>
+							</optgroup>
+							<optgroup label="DM">
+								<option value="DM2.6">Diamond 2.6</option>
+								<option value="DM3.9">Diamond 3.9</option>
+							</optgroup>
+							<optgroup label="Hybrid">
+								<option value="Hybrid 15 (MC15)">Hybrid 15 (MC15)</option>
+								<option value="Hybrid 15S-Strip">Hybrid 15S-Strip</option>
+								<option value="Hybrid 18">Hybrid 18</option>
+							</optgroup>
+							<optgroup label="JA">
+								<option value="JA2.6">Jasper 2.6</option>
+								<option value="JA3.9">Jasper 3.9</option>
+								<option value="JA5.2">Jasper 5.2</option>
+							</optgroup>
+							<optgroup label="LINX">
+								<option value="LINX9">LINX9</option>
+								<option value="LINX12">LINX12</option>
+								<option value="LINX18">LINX18</option>
+								<option value="LINX25">LINX25</option>
+							</optgroup>
+							<optgroup label="MC">
+								<option value="MC5H T2">MC5H T2</option>
+								<option value="MC5H T2">MC5H T2</option>
+								<option value="MC7H T2">MC7H T2</option>
+								<option value="MC7H HB T2">MC7H HB T2</option>
+								<option value="MC9H T2">MC9H T2</option>
+								<option value="MC12H T2">MC12H T2</option>
+								<option value="MC18H T2">MC18H T2</option>
+							</optgroup>
+							<optgroup label="Strip">
+								<option value="Strip">Strip</option>
+								<option value="30cm Strip">30cm Strip</option>
+								<option value="60cm Strip">60cm Strip</option>
+								<option value="90cm Strip">90cm Strip</option>
+								<option value="120cm Strip">120cm Strip</option>
+							</optgroup>
+							<optgroup label="RB">
+								<option value="RB2.3">Ruby 2.3</option>
+							</optgroup>
+							<optgroup label="SP">
+								<option value="SP1.5">Sapphire 1.5</option>
+							</optgroup>
+							<optgroup label="Vanish">
+								<option value="Vanish V8S">Vanish V8S</option>
+								<option value="Vanish 8T">Vanish 8T </option>
+								<option value="Vanish 8T Half">Vanish 8T Half</option>
+								<option value="Vanish V8">Vanish V8</option>
+								<option value="Vanish 18">Vanish 18</option>
+								<option value="Vanish 25">Vanish 25</option>
+							</optgroup>
+							<optgroup label="Processor">
+								<option value="HELIOS 4K.8K">MVR HELIOS 4K/8K</option>
+								<option value="HELIOS JR">MVR HELIOS JR</option>
+								<option value="eV4">ROE EVISION eV4</option>
+								<option value="HD102">ROE EVISION HD102</option>
+								<option value="Brompton SX40">Brompton Tessera SX40</option>
+								<option value="Brompton S8">Brompton Tessera SX40</option>
+								<option value="Brompton M2">Brompton Tessera M2</option>
+								<option value="Brompton S4">Brompton Tessera S4</option>
+								<option value="Brompton T1">Brompton Tessera T1</option>
+							</optgroup>
+						</select>
+					</td>
+
+
+					<!--
+                                        <td>
+                                                <select id="format" name="format" size="10">
+                                                        <option value="stp">stp</option>
+                                                        <option value="dwg">dwg</option>
+                                                        <option value="pdf">pdf</option>
+                                                        <option value="x_t">x_t</option>
+                                                        <option value="png">png</option>
+                                                        <option value="other">other</option>
+                                                </select>
+                                        </td>-->
+				</tr>
+				<!--
+                                <tr>
+                                        <td><button onclick="ResetEl('form')">Reset</button></td>
+                                        <td><button onclick="ResetEl('product')">Reset</button></td>
+                                        <td><button onclick="ResetEl('Description')">Reset</button></td>
+                                        <td><button onclick="ResetEl('product')">Reset</button></td>
+                                        <td><button onclick="ResetEl('option')">Reset</button></td>
+                                        <td><button onclick="ResetEl('property')">Reset</button></td>
+                                        <td><button onclick="ResetEl('version')">Reset</button></td>
+                                        <td><button onclick="ResetEl('dimensional')">Reset</button></td>
+                                        <td><button onclick="ResetEl('format')">Reset</button></td>
+                                </tr>-->
+			</table>
+		</form>
+		<button onclick="JoinTextDrawings()">Calculate</button>
+		<button onclick="UncheckALL('drawingscheck')">UncheckALL Product Family</button>
+		<button onclick="UnselectALL('drawings-product')">Unselect Product</button>
+	</div>
+
+	<!--Manuals-->
+	<button type="button" class="collapsible">Manuals</button>
+	<div class="content">
+		<form id="manuals">
+
+
+			<input type="reset" value="Reset" onclick="Reset()">
+			<table border="1" style="text-align:center">
+				<tr>
+					<td>ROE</td>
+					<td>Manual Type</td>
+					<td>Remarks</td>
+					<td>Product Family</td>
+					<td>Product</td>
+					<td>Version</td>
+
+				</tr>
+				<tr>
+					<td>
+						<select id="manuals-ROE" name="ROE" size="2">
+							<option value="ROE_" selected>ROE</option>
+						</select>
+					</td>
+					<td>
+						<select id="manuals-manual-type" name="manual-type" size="4">
+							<option value="User-Manual_">User Manual</option>
+							<option value="Application-Note_">Application Note</option>
+							<option value="Service-Manual_">Service Manual</option>
+							<option value="SPEC_">SPEC</option>
+						</select>
+					</td>
+					<td>
+						<table>
+							<tr>
+								<input id="manuals-remark" type="text" name="manuals-remark" size="30"
+									placeholder="CB5 Hibino">
+							</tr>
+							<tr>
+								<div>
+									Remarks for special manual.<br>
+									E.g. manuals for customized panels.
+								</div>
+							</tr>
+						</table>
+					</td>
+					<td style="text-align: left;">
+						<table>
+							<td>
+								<input type="checkbox" class="manualscheck" id="manuals-NA" name="NA" value="">
+								<label for="NA"> N/A</label><br>
+								<input type="checkbox" class="manualscheck" id="manuals-AB" name="AB" value="AB.">
+								<label for="AB"> AB-Amber</label><br>
+								<input type="checkbox" class="manualscheck" id="manuals-BM" name="BM" value="BM.">
+								<label for="BM"> BM-Black Marble</label><br>
+								<input type="checkbox" class="manualscheck" id="manuals-BO" name="BO" value="BO.">
+								<label for="BO"> BO-Black OnyX</label><br>
+								<input type="checkbox" class="manualscheck" id="manuals-BP" name="BP" value="BP.">
+								<label for="BP"> BP-Black Pearl</label><br>
+								<input type="checkbox" class="manualscheck" id="manuals-BQ" name="BQ" value="BQ.">
+								<label for="BQ"> BQ-Black Quartz</label><br>
+								<input type="checkbox" class="manualscheck" id="manuals-CB" name="CB" value="CB.">
+								<label for="CB"> CB-Carbon</label><br>
+								<input type="checkbox" class="manualscheck" id="manuals-DM" name="DM" value="DM.">
+								<label for="DM"> DM-Diamond</label><br>
+								<input type="checkbox" class="manualscheck" id="manuals-HY" name="HY" value="HY.">
+								<label for="HY"> HY-Hybrid</label><br>
+								<input type="checkbox" class="manualscheck" id="manuals-JA" name="JA" value="JA.">
+								<label for="JA"> JA-Jasper</label><br>
+							</td>
+							<td>
+								<input type="checkbox" class="manualscheck" id="manuals-LX" name="LX" value="LX.">
+								<label for="LX"> LX-LINX</label><br>
+								<input type="checkbox" class="manualscheck" id="manuals-MC" name="MC" value="MC.">
+								<label for="MC"> MC-Magic Cube</label><br>
+								<input type="checkbox" class="manualscheck" id="manuals-Strip" name="Strip"
+									value="Strip.">
+								<label for="Strip"> Strip-ROE Strip</label><br>
+								<input type="checkbox" class="manualscheck" id="manuals-RB" name="RB" value="RB.">
+								<label for="RB"> RB-Ruby</label><br>
+								<input type="checkbox" class="manualscheck" id="manuals-SP" name="SP" value="SP.">
+								<label for="SP"> SP-Sapphire</label><br>
+								<input type="checkbox" class="manualscheck" id="manuals-Vanish" name="Vanish"
+									value="Vanish.">
+								<label for="Vanish"> Vanish-Vanish</label><br>
+								<input type="checkbox" class="manualscheck" id="manuals-MVR" name="MVR" value="MVR.">
+								<label for="MVR"> MVR HELIOS</label><br>
+								<input type="checkbox" class="manualscheck" id="manuals-ev4" name="ev4" value="eV4.">
+								<label for="ROE"> ROE EVISION eV4</label><br>
+								<input type="checkbox" class="manualscheck" id="manuals-hd102" name="hd102"
+									value="HD102.">
+								<label for="ROE"> ROE EVISION HD102</label><br>
+								<input type="checkbox" class="manualscheck" id="manuals-Brompton" name="Brompton"
+									value="Brompton.">
+								<label for="Brompton"> Brompton Tessera</label><br>
+							</td>
+						</table>
+					</td>
+					<td>
+						<select id="manuals-product" name="manuals-product" size="12">
+							<option value="">N/A</option>
+							<optgroup label="AB">
+								<option value="AB0.9">Amber 0.9</option>
+								<option value="AB1.2">Amber 1.2</option>
+								<option value="AB1.5">Amber 1.5</option>
+								<option value="AB1.8">Amber 1.8</option>
+							</optgroup>
+							<optgroup label="BM">
+								<option value="BM2">BM2</option>
+								<option value="BM4">BM4</option>
+								<option value="BM5">BM5</option>
+								<option value="BM15">BM15</option>
+							</optgroup>
+							<optgroup label="BO">
+								<option value="BO2">BO2</option>
+								<option value="BO3">BO3</option>
+								<option value="BO2 Triangle">BO2 Triangle</option>
+								<option value="BO2 90 Degree Corner">BO2 90 Degree Corner</option>
+								<option value="BO3 90 Degree Corner">BO3 90 Degree Corner</option>
+								<option value="BO2 Round Corner">BO2 Round Corner</option>
+								<option value="BO3 Round Corner">BO3 Round Corner</option>
+							</optgroup>
+							<optgroup label="BP">
+								<option value="BP2">BP2</option>
+								<option value="BP3">BP3</option>
+								<option value="BP3 90 Degree Corner">BP3 90 Degree Corner</option>
+								<option value="BP3 Round Corner">BP3 Round Corner</option>
+							</optgroup>
+							<optgroup label="BQ">
+								<option value="BQ3.9">BQ 3.9</option>
+								<option value="BQ4.6">BQ 4.6</option>
+							</optgroup>
+							<optgroup label="CB">
+								<option value="CB3">CB3</option>
+								<option value="CB3-H">CB3 Half Panel</option>
+								<option value="CB5W">CB5-White LED</option>
+								<option value="CB5B">CB5-Black LED</option>
+								<option value="CB5W-H">CB5 Half Panel-White LED</option>
+								<option value="CB5B-H">CB5 Half Panel-Black LED</option>
+								<option value="CB8-Transparent">CB8-Transparent</option>
+								<option value="CB8-H-Transparent">CB8 Half Panel-Transparent</option>
+								<option value="CB8-Solid">CB8-Solid</option>
+								<option value="CB8-H-Solid">CB8 Half Panel-Solid</option>
+							</optgroup>
+							<optgroup label="DM">
+								<option value="DM2.6">Diamond 2.6</option>
+								<option value="DM3.9">Diamond 3.9</option>
+							</optgroup>
+							<optgroup label="Hybrid">
+								<option value="Hybrid 15 (MC15)">Hybrid 15 (MC15)</option>
+								<option value="Hybrid 15S-Strip">Hybrid 15S-Strip</option>
+								<option value="Hybrid 18">Hybrid 18</option>
+							</optgroup>
+							<optgroup label="JA">
+								<option value="JA2.6">Jasper 2.6</option>
+								<option value="JA3.9">Jasper 3.9</option>
+								<option value="JA5.2">Jasper 5.2</option>
+							</optgroup>
+							<optgroup label="LINX">
+								<option value="LINX9">LINX9</option>
+								<option value="LINX12">LINX12</option>
+								<option value="LINX18">LINX18</option>
+								<option value="LINX25">LINX25</option>
+							</optgroup>
+							<optgroup label="MC">
+								<option value="MC5H T2">MC5H T2</option>
+								<option value="MC5H T2">MC5H T2</option>
+								<option value="MC7H T2">MC7H T2</option>
+								<option value="MC7H HB T2">MC7H HB T2</option>
+								<option value="MC9H T2">MC9H T2</option>
+								<option value="MC12H T2">MC12H T2</option>
+								<option value="MC18H T2">MC18H T2</option>
+							</optgroup>
+							<optgroup label="Strip">
+								<option value="Strip">Strip</option>
+								<option value="30cm Strip">30cm Strip</option>
+								<option value="60cm Strip">60cm Strip</option>
+								<option value="90cm Strip">90cm Strip</option>
+								<option value="120cm Strip">120cm Strip</option>
+							</optgroup>
+							<optgroup label="RB">
+								<option value="RB2.3">Ruby 2.3</option>
+							</optgroup>
+							<optgroup label="SP">
+								<option value="SP1.5">Sapphire 1.5</option>
+							</optgroup>
+							<optgroup label="Vanish">
+								<option value="Vanish V8S">Vanish V8S</option>
+								<option value="Vanish 8T">Vanish 8T </option>
+								<option value="Vanish 8T Half">Vanish 8T Half</option>
+								<option value="Vanish V8">Vanish V8</option>
+								<option value="Vanish 18">Vanish 18</option>
+								<option value="Vanish 25">Vanish 25</option>
+							</optgroup>
+							<optgroup label="Processor">
+								<option value="HELIOS 4K.8K">MVR HELIOS 4K/8K</option>
+								<option value="HELIOS JR">MVR HELIOS JR</option>
+								<option value="eV4">ROE EVISION eV4</option>
+								<option value="HD102">ROE EVISION HD102</option>
+								<option value="Brompton SX40">Brompton Tessera SX40</option>
+								<option value="Brompton S8">Brompton Tessera SX40</option>
+								<option value="Brompton M2">Brompton Tessera M2</option>
+								<option value="Brompton S4">Brompton Tessera S4</option>
+								<option value="Brompton T1">Brompton Tessera T1</option>
+							</optgroup>
+						</select>
+					</td>
+					<td>
+						<table>
+							<tr>
+								<input type="number" step="0.1" placeholder="e.g. 1.9" id="manuals-version"
+									onkeydown="limit(this, 4);" onkeyup="limit(this, 4);"
+									onkeyup="this.value = minmax(this.value, 0, 4)" min="0.1" size="8">
+							</tr>
+							<tr>
+								<div>Input NUM only.<br><br>1 decimal place, eg. 1.9.<br>Go with 2.0 if beyond.</div>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<button onclick="JoinTextManuals()">Calculate</button>
+		<button onclick="UncheckALL('manualscheck')">UncheckALL Product Family</button>
+		<button onclick="UnselectALL('manuals-product')">Unselect Product</button>
+	</div>
+
+	<!--Certifications-->
+	<button type="button" class="collapsible">Certificates & Test Reports</button>
+	<div class="content">
+		<form id="cert">
+
+
+			<input type="reset" value="Reset" onclick="Reset()">
+			<table border="1" style="text-align:center">
+				<tr>
+					<td>ROE</td>
+					<td>EXT/INT?</td>
+					<td>Agent/STD</td>
+					<td>Type</td>
+					<td>Part Description</td>
+					<td>Product Family</td>
+					<td>Product</td>
+				</tr>
+				<tr>
+					<td>
+						<select id="cert-ROE" name="ROE" size="2">
+							<option value="ROE_" selected>ROE</option>
+						</select>
+					</td>
+					<td>
+						<select id="cert-external" name="external" size="2">
+							<option value="E_">External</option>
+							<option value="I_">Internal</option>
+						</select>
+					</td>
+					<td>
+						<select id="cert-agent" name="cert-agent" size="7">
+							<option value="">N/A</option>
+							<option value="CE-EMC_">CE-EMC</option>
+							<option value="CE-LVD_">CE-LVD</option>
+							<option value="ETL_">ETL</option>
+							<option value="FCC_">FCC</option>
+							<option value="RoHS_">RoHS</option>
+							<option value="TUV_">TUV</option>
+						</select>
+					</td>
+					<td>
+						<select id="cert-type" name="cert-type" size="2">
+							<option value="Certificate_">Certificate</option>
+							<option value="Test-Report_">Test Report</option>
+						</select>
+					</td>
+					<td>
+						<table>
+							<tr>
+								<input id="cert-description" type="text" name="cert-description" size="30"
+									placeholder="0.5m Hanging Bar with Shackle">
+							</tr>
+							<tr>
+								<div>
+									Description for part<br>
+									E.g. 0.5m Hanging Bar with Shackle
+								</div>
+							</tr>
+						</table>
+					</td>
+					<td style="text-align: left;">
+						<table>
+							<td>
+								<input type="checkbox" class="certcheck" id="cert-NA" name="NA" value="">
+								<label for="NA"> N/A</label><br>
+								<input type="checkbox" class="certcheck" id="cert-AB" name="AB" value="AB.">
+								<label for="AB"> AB-Amber</label><br>
+								<input type="checkbox" class="certcheck" id="cert-BM" name="BM" value="BM.">
+								<label for="BM"> BM-Black Marble</label><br>
+								<input type="checkbox" class="certcheck" id="cert-BO" name="BO" value="BO.">
+								<label for="BO"> BO-Black OnyX</label><br>
+								<input type="checkbox" class="certcheck" id="cert-BP" name="BP" value="BP.">
+								<label for="BP"> BP-Black Pearl</label><br>
+								<input type="checkbox" class="certcheck" id="cert-BQ" name="BQ" value="BQ.">
+								<label for="BQ"> BQ-Black Quartz</label><br>
+								<input type="checkbox" class="certcheck" id="cert-CB" name="CB" value="CB.">
+								<label for="CB"> CB-Carbon</label><br>
+								<input type="checkbox" class="certcheck" id="cert-DM" name="DM" value="DM.">
+								<label for="DM"> DM-Diamond</label><br>
+								<input type="checkbox" class="certcheck" id="cert-HY" name="HY" value="HY.">
+								<label for="HY"> HY-Hybrid</label><br>
+								<input type="checkbox" class="certcheck" id="cert-JA" name="JA" value="JA.">
+								<label for="JA"> JA-Jasper</label><br>
+							</td>
+							<td>
+								<input type="checkbox" class="certcheck" id="cert-LX" name="LX" value="LX.">
+								<label for="LX"> LX-LINX</label><br>
+								<input type="checkbox" class="certcheck" id="cert-MC" name="MC" value="MC.">
+								<label for="MC"> MC-Magic Cube</label><br>
+								<input type="checkbox" class="certcheck" id="cert-Strip" name="Strip" value="Strip.">
+								<label for="Strip"> Strip-ROE Strip</label><br>
+								<input type="checkbox" class="certcheck" id="cert-RB" name="RB" value="RB.">
+								<label for="RB"> RB-Ruby</label><br>
+								<input type="checkbox" class="certcheck" id="cert-SP" name="SP" value="SP.">
+								<label for="SP"> SP-Sapphire</label><br>
+								<input type="checkbox" class="certcheck" id="cert-Vanish" name="Vanish" value="Vanish.">
+								<label for="Vanish"> Vanish-Vanish</label><br>
+								<input type="checkbox" class="certcheck" id="cert-MVR" name="MVR" value="MVR.">
+								<label for="MVR"> MVR HELIOS</label><br>
+								<input type="checkbox" class="certcheck" id="cert-ev4" name="ev4" value="eV4.">
+								<label for="ROE"> ROE EVISION eV4</label><br>
+								<input type="checkbox" class="certcheck" id="cert-hd102" name="hd102" value="HD102.">
+								<label for="ROE"> ROE EVISION HD102</label><br>
+								<input type="checkbox" class="certcheck" id="cert-Brompton" name="Brompton"
+									value="Brompton.">
+								<label for="Brompton"> Brompton Tessera</label><br>
+							</td>
+						</table>
+					</td>
+					<td>
+						<select id="cert-product" name="cert-product" size="12">
+							<option value="">N/A</option>
+							<optgroup label="AB">
+								<option value="AB0.9">Amber 0.9</option>
+								<option value="AB1.2">Amber 1.2</option>
+								<option value="AB1.5">Amber 1.5</option>
+								<option value="AB1.8">Amber 1.8</option>
+							</optgroup>
+							<optgroup label="BM">
+								<option value="BM2">BM2</option>
+								<option value="BM4">BM4</option>
+								<option value="BM5">BM5</option>
+								<option value="BM15">BM15</option>
+							</optgroup>
+							<optgroup label="BO">
+								<option value="BO2">BO2</option>
+								<option value="BO3">BO3</option>
+								<option value="BO2 Triangle">BO2 Triangle</option>
+								<option value="BO2 90 Degree Corner">BO2 90 Degree Corner</option>
+								<option value="BO3 90 Degree Corner">BO3 90 Degree Corner</option>
+								<option value="BO2 Round Corner">BO2 Round Corner</option>
+								<option value="BO3 Round Corner">BO3 Round Corner</option>
+							</optgroup>
+							<optgroup label="BP">
+								<option value="BP2">BP2</option>
+								<option value="BP3">BP3</option>
+								<option value="BP3 90 Degree Corner">BP3 90 Degree Corner</option>
+								<option value="BP3 Round Corner">BP3 Round Corner</option>
+							</optgroup>
+							<optgroup label="BQ">
+								<option value="BQ3.9">BQ 3.9</option>
+								<option value="BQ4.6">BQ 4.6</option>
+							</optgroup>
+							<optgroup label="CB">
+								<option value="CB3">CB3</option>
+								<option value="CB3-H">CB3 Half Panel</option>
+								<option value="CB5W">CB5-White LED</option>
+								<option value="CB5B">CB5-Black LED</option>
+								<option value="CB5W-H">CB5 Half Panel-White LED</option>
+								<option value="CB5B-H">CB5 Half Panel-Black LED</option>
+								<option value="CB8-Transparent">CB8-Transparent</option>
+								<option value="CB8-H-Transparent">CB8 Half Panel-Transparent</option>
+								<option value="CB8-Solid">CB8-Solid</option>
+								<option value="CB8-H-Solid">CB8 Half Panel-Solid</option>
+							</optgroup>
+							<optgroup label="DM">
+								<option value="DM2.6">Diamond 2.6</option>
+								<option value="DM3.9">Diamond 3.9</option>
+							</optgroup>
+							<optgroup label="Hybrid">
+								<option value="Hybrid 15 (MC15)">Hybrid 15 (MC15)</option>
+								<option value="Hybrid 15S-Strip">Hybrid 15S-Strip</option>
+								<option value="Hybrid 18">Hybrid 18</option>
+							</optgroup>
+							<optgroup label="JA">
+								<option value="JA2.6">Jasper 2.6</option>
+								<option value="JA3.9">Jasper 3.9</option>
+								<option value="JA5.2">Jasper 5.2</option>
+							</optgroup>
+							<optgroup label="LINX">
+								<option value="LINX9">LINX9</option>
+								<option value="LINX12">LINX12</option>
+								<option value="LINX18">LINX18</option>
+								<option value="LINX25">LINX25</option>
+							</optgroup>
+							<optgroup label="MC">
+								<option value="MC5H T2">MC5H T2</option>
+								<option value="MC5H T2">MC5H T2</option>
+								<option value="MC7H T2">MC7H T2</option>
+								<option value="MC7H HB T2">MC7H HB T2</option>
+								<option value="MC9H T2">MC9H T2</option>
+								<option value="MC12H T2">MC12H T2</option>
+								<option value="MC18H T2">MC18H T2</option>
+							</optgroup>
+							<optgroup label="Strip">
+								<option value="Strip">Strip</option>
+								<option value="30cm Strip">30cm Strip</option>
+								<option value="60cm Strip">60cm Strip</option>
+								<option value="90cm Strip">90cm Strip</option>
+								<option value="120cm Strip">120cm Strip</option>
+							</optgroup>
+							<optgroup label="RB">
+								<option value="RB2.3">Ruby 2.3</option>
+							</optgroup>
+							<optgroup label="SP">
+								<option value="SP1.5">Sapphire 1.5</option>
+							</optgroup>
+							<optgroup label="Vanish">
+								<option value="Vanish V8S">Vanish V8S</option>
+								<option value="Vanish 8T">Vanish 8T </option>
+								<option value="Vanish 8T Half">Vanish 8T Half</option>
+								<option value="Vanish V8">Vanish V8</option>
+								<option value="Vanish 18">Vanish 18</option>
+								<option value="Vanish 25">Vanish 25</option>
+							</optgroup>
+							<optgroup label="Processor">
+								<option value="HELIOS 4K.8K">MVR HELIOS 4K/8K</option>
+								<option value="HELIOS JR">MVR HELIOS JR</option>
+								<option value="eV4">ROE EVISION eV4</option>
+								<option value="HD102">ROE EVISION HD102</option>
+								<option value="Brompton SX40">Brompton Tessera SX40</option>
+								<option value="Brompton S8">Brompton Tessera SX40</option>
+								<option value="Brompton M2">Brompton Tessera M2</option>
+								<option value="Brompton S4">Brompton Tessera S4</option>
+								<option value="Brompton T1">Brompton Tessera T1</option>
+							</optgroup>
+						</select>
+					</td>
+
+				</tr>
+			</table>
+		</form>
+		<button onclick="JoinTextCert()">Calculate</button>
+		<button onclick="UncheckALL('certcheck')">UncheckALL Product Family</button>
+		<button onclick="UnselectALL('cert-product')">Unselect Product</button>
+	</div>
+
+	<!--Scrip for collapsing-->
+	<script>
+		var coll = document.getElementsByClassName("collapsible");
+		var i;
+
+		for (i = 0; i < coll.length; i++) {
+			coll[i].addEventListener("click", function () {
+				this.classList.toggle("active");
+				var content = this.nextElementSibling;
+				if (content.style.maxHeight) {
+					content.style.maxHeight = null;
+				} else {
+					content.style.maxHeight = content.scrollHeight + "px";
+				}
+			});
+		}
+	</script>
+</body>
+
+</html>
+
+<!--
+	Created by Rony Wang.
+-->
